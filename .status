@@ -1,0 +1,31 @@
+# Don't run any test-like files that show up in packages directories. It
+# shouldn't be necessary to run "pub install" in these packages, but if you do
+# it shouldn't break the tests.
+*/packages/*/*: Skip
+*/*/packages/*/*: Skip
+*/*/*/packages/*/*: Skip
+*/*/*/*/packages/*/*: Skip
+*/*/*/*/*/packages/*/*: Skip
+
+test/*: Skip
+
+[ $runtime == vm || $runtime == d8 || $runtime == jsshell ]
+*: Skip # uses dart:html
+
+[ $browser]
+build/test/listorder_test: Pass, RuntimeError # Issue 19265
+
+[ $compiler == none && ($runtime == dartium || $runtime == ContentShellOnAndroid) ]
+build/test/listorder_test: Pass, RuntimeError, Timeout # Issue 18931, Issue 19127
+build/test/mainpage_test: Pass, RuntimeError # Issue 18931
+build/test/markdone_shadow_test: Pass, RuntimeError # Issue 18931
+build/test/markdone_test: Pass, RuntimeError # Issue 18931
+
+[ $compiler == none && $runtime == ContentShellOnAndroid ]
+build/test/listorder_test: Skip # Times out
+build/test/mainpage_test: Skip # Times out
+build/test/markdone_shadow_test: Skip # Times out
+build/test/markdone_test: Skip # Times out
+
+[ $compiler == none && $runtime == drt ]
+build/test/markdone_shadow_test: RuntimeError # Issue 19414
