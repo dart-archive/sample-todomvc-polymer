@@ -1,4 +1,4 @@
-library todomvc.web.elements.td_item;
+library todomvc.td_item;
 
 import 'dart:html';
 import 'package:polymer/polymer.dart';

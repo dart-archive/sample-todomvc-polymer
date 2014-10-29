@@ -9,7 +9,7 @@ import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
-import '../web/elements/td_model.dart';
+import 'package:todomvc/td_model.dart';
 import 'utils.dart';
 
 Node findWithText(Node node, String text) {

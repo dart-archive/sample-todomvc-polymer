@@ -1,8 +1,9 @@
-library todomvc.web.elements.td_model;
+library todomvc.td_model;
 
+import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import '../lib-elements/polymer_localstorage.dart';
+import 'package:core_elements/core_localstorage_dart.dart';
 
 class Todo extends Observable {
   @observable String title;
@@ -27,7 +28,7 @@ class TodoModel extends PolymerElement {
   @observable int completedCount = 0;
   @observable int activeCount = 0;
   @observable bool allCompleted = false;
-  @observable PolymerLocalStorage storage;
+  @observable CoreLocalStorage storage;
   @observable String filter;
   @observable String activeItemWord;
 
@@ -41,9 +42,12 @@ class TodoModel extends PolymerElement {
 
   void ready() {
     async((_) {
-      if (items == null) items = new ObservableList<Todo>();
+      if (items == null && storage == null) {
+        items = new ObservableList<Todo>();
+      }
     });
   }
+
 
   void filterChanged() {
     filterItems();
@@ -66,8 +70,13 @@ class TodoModel extends PolymerElement {
 
   void storageIdChanged() {
     storage = document.querySelector('#$storageId');
-    if (storage != null && storage.value != null) {
+    if (storage == null) return;
+    if (storage.loaded) {
       items = toObservable(storage.value.map((i) => new Todo.fromJson(i)));
+    } else {
+      storage.on['core-localstorage-load'].listen((e) {
+        items = toObservable(storage.value.map((i) => new Todo.fromJson(i)));
+      });
     }
   }
 

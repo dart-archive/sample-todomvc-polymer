@@ -1,5 +1,5 @@
-<link rel="import" href="../lib-elements/polymer-selector.html">
-<link rel="import" href="../lib-elements/simple_router.html">
+<link rel="import" href="../../packages/core_elements/core_selector.html">
+<link rel="import" href="router/simple_router.html">
 <link rel="import" href="td_input.html">
 <link rel="import" href="td_item.html">
 
@@ -28,7 +28,7 @@
       <footer id="footer" hidden?="{{model.items.length == 0}}">
         <span id="todo-count"><strong>{{model.activeCount}}</strong>
             {{model.activeItemWord}} left</span>
-        <polymer-selector id="filters" selected="{{activeRoute}}">
+        <core-selector id="filters" selected="{{activeRoute}}">
           <li label="all">
             <a _href="{{baseUri}}#/">All</a>
           </li>
@@ -38,7 +38,7 @@
           <li label="completed">
             <a _href="{{baseUri}}#/completed">Completed</a>
           </li>
-        </polymer-selector>
+        </core-selector>
         <button hidden?="{{model.completedCount == 0}}" id="clear-completed"
             on-click="{{clearCompletedAction}}">Clear completed
             ({{model.completedCount}})</button>

@@ -4,19 +4,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Polymer.dart • TodoMVC</title>
-    <link rel="stylesheet" href="app/app.css">
-    <script src="packages/web_components/dart_support.js"></script>
-    <link rel="import" href="lib-elements/polymer_localstorage.html">
-    <link rel="import" href="elements/td_model.html">
-    <link rel="import" href="elements/td_todos.html">
+    <link rel="stylesheet" href="packages/todomvc/app/app.css">
+    <link rel="import" href="packages/core_elements/core_localstorage_dart.html">
+    <link rel="import" href="packages/todomvc/td_model.html">
+    <link rel="import" href="packages/todomvc/td_todos.html">
     <script type="application/dart">export 'package:polymer/init.dart';</script>
   </head>
   <body unresolved>
     <header>
       <h1>todos</h1>
     </header>
-    <polymer-localstorage id="storage" name="todos-polymer">
-    </polymer-localstorage>
+    <core-localstorage-dart id="storage" name="todos-polymer">
+    </core-localstorage-dart>
     <td-model id="model" storageId="storage"></td-model>
     <td-todos modelId="model"></td-todos>
     <footer id="info">
