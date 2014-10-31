@@ -30,13 +30,13 @@
             {{model.activeItemWord}} left</span>
         <core-selector id="filters" selected="{{activeRoute}}">
           <li label="all">
-            <a _href="{{baseUri}}#/">All</a>
+            <a href="#/">All</a>
           </li>
           <li label="active">
-            <a _href="{{baseUri}}#/active">Active</a>
+            <a href="#/active">Active</a>
           </li>
           <li label="completed">
-            <a _href="{{baseUri}}#/completed">Completed</a>
+            <a href="#/completed">Completed</a>
           </li>
         </core-selector>
         <button hidden?="{{model.completedCount == 0}}" id="clear-completed"
