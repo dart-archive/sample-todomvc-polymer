@@ -1,6 +1,5 @@
 library todomvc.td_model;
 
-import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:core_elements/core_localstorage_dart.dart';

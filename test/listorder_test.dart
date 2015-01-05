@@ -4,13 +4,11 @@
 
 library todomvc.test.listorder_test;
 
-import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
 import 'package:todomvc/td_model.dart';
-import 'package:todomvc/td_todos.dart';
 import 'utils.dart';
 
 /**

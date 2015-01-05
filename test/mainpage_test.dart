@@ -4,7 +4,6 @@
 
 library todomvc.test.mainpage_test;
 
-import 'dart:async';
 import 'dart:html';
 import 'dart:js' as js;
 import 'package:polymer/polymer.dart';
@@ -50,7 +49,7 @@ main() {
     var color = root.querySelector('#footer').getComputedStyle().color;
     expect(color, 'rgb(119, 119, 119)');
 
-    return onPropertyInit(model, 'items').then((_) {
+    return onPropertyInit(model as TodoModel, 'items').then((_) {
       expect(model.items, [], reason: 'no items yet');
       expect(app.model, model, reason: 'model should be data-bound');
     });

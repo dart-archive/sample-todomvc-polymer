@@ -14,11 +14,11 @@ import 'utils.dart';
 
 Node findWithText(Node node, String text) {
   if (node.text == text) return node;
-  if (node is Element && (node as Element).localName == 'polymer-element') {
+  if (node is Element && node.localName == 'polymer-element') {
     return null;
   }
-  if (node is Element && (node as Element).shadowRoot != null) {
-    var r = findWithText((node as Element).shadowRoot, text);
+  if (node is Element && node.shadowRoot != null) {
+    var r = findWithText(node.shadowRoot, text);
     if (r != null) return r;
   }
   for (var n in node.nodes) {
