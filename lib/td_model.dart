@@ -71,12 +71,18 @@ class TodoModel extends PolymerElement {
     storage = document.querySelector('#$storageId');
     if (storage == null) return;
     if (storage.loaded) {
-      items = toObservable(storage.value.map((i) => new Todo.fromJson(i)));
+      _setItems();
     } else {
-      storage.on['core-localstorage-load'].listen((e) {
-        items = toObservable(storage.value.map((i) => new Todo.fromJson(i)));
-      });
+      storage.on['core-localstorage-load'].take(1).listen((_) => _setItems());
     }
+  }
+  
+  void _setItems() {
+    if (storage.value == null) {
+      items = toObservable([]);
+      return;
+    }
+    items = toObservable(storage.value.map((i) => new Todo.fromJson(i)));
   }
 
   void filterItems() {
