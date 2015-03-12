@@ -41,7 +41,7 @@ class TodoModel extends PolymerElement {
 
   void ready() {
     async((_) {
-      if (items == null && storage == null) {
+      if (items == null) {
         items = new ObservableList<Todo>();
       }
     });
