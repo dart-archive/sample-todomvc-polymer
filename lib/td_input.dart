@@ -3,11 +3,13 @@ library todomvc.td_input;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
-@CustomTag('td-input')
-class TodoInput extends InputElement with Polymer, Observable {
+@PolymerElement('td-input', extendsTag: 'input')
+class TodoInput extends InputElement with PolymerJsMixin, JsProxy {
   factory TodoInput() => new Element.tag('input', 'td-input');
   TodoInput.created() : super.created() {
     polymerCreated();
+    on['keyup'].listen(keyupAction);
+    on['keypress'].listen(keypressAction);
   }
 
   keypressAction(e) {

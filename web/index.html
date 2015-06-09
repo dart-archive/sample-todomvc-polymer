@@ -5,19 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Polymer.dart • TodoMVC</title>
     <link rel="stylesheet" href="packages/todomvc/app/app.css">
-    <link rel="import" href="packages/core_elements/core_localstorage_dart.html">
-    <link rel="import" href="packages/todomvc/td_model.html">
-    <link rel="import" href="packages/todomvc/td_todos.html">
-    <script type="application/dart">export 'package:polymer/init.dart';</script>
   </head>
   <body unresolved>
     <header>
       <h1>todos</h1>
     </header>
-    <core-localstorage-dart id="storage" name="todos-polymer">
-    </core-localstorage-dart>
-    <td-model id="model" storageId="storage"></td-model>
-    <td-todos modelId="model"></td-todos>
+    <td-model id="model" storage-id="storage"></td-model>
+    <td-todos model-id="model"></td-todos>
     <footer id="info">
       <p>Double-click to edit a todo</p>
       <p>Created by <a href="https://www.dartlang.org/polymer-dart/">
@@ -25,5 +19,6 @@
       <p>This example was built using a pre-alpha version of Polymer.dart.</p>
       <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
     </footer>
+    <script type="application/dart" src="index.dart"></script>
   </body>
 </html>

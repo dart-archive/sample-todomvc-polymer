@@ -1,61 +1,87 @@
+@HtmlImport('td_todos.html')
 library todomvc.td_todos;
 
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import 'td_input.dart';
+import 'package:web_components/web_components.dart' show HtmlImport;
 import 'td_model.dart';
+import 'td_input.dart';
+import 'td_item.dart';
+//import 'router/simple_router.dart';
 
-@CustomTag('td-todos')
-class TodoList extends PolymerElement {
-  @published String modelId;
+@PolymerElement('td-todos')
+class TodoList extends PolymerStandardElement {
+  @Property(notify: true, observer: 'modelIdChanged') String modelId;
 
-  @observable TodoModel model;
-  @observable String activeRoute;
+  @Property(notify: true) TodoModel model;
+  @Property(computed: 'isEmpty(model)')
+  bool modelCompletedEmpty;
+
+  @Property(notify: true) String activeRoute;
 
   factory TodoList() => new Element.tag('td-todos');
   TodoList.created() : super.created();
 
   TodoInput get _newTodo => $['new-todo'];
 
-  void modelIdChanged() {
-    model = document.querySelector('#$modelId');
+  ready() {
+    set('modelId', 'model');
   }
 
-  void routeAction(e, route) {
-    if (model != null) model.filter = route;
+  @eventHandler
+  bool isEmpty(TodoModel model) => model.completedCount == 0;
 
-    // TODO(jmesserly): polymer_expressions lacks boolean conversions.
-    activeRoute = (route != null && route != '') ? route : 'all';
+  @eventHandler
+  void modelIdChanged(newId, [__]) {
+    set('model', document.querySelector('#$newId'));
   }
 
-  void addTodoAction() {
+//  void routeAction(e, route) {
+//    if (model != null) model.filter = route;
+//
+//    // TODO(jmesserly): polymer_expressions lacks boolean conversions.
+//    activeRoute = (route != null && route != '') ? route : 'all';
+//  }
+
+  @eventHandler
+  void addTodoAction(_, __) {
     model.newItem(_newTodo.value);
-    // when polyfilling Object.observe, make sure we update immediately
-    Observable.dirtyCheck();
+    notifyPath('model.items', model.items);
+    notifyPath('model.filtered', model.filtered);
     _newTodo.value = '';
   }
 
-  void cancelAddTodoAction() {
+  @eventHandler
+  void cancelAddTodoAction(_, __) {
     _newTodo.value = '';
   }
 
-  void itemChangedAction() {
+  @eventHandler
+  void itemChangedAction(_, __) {
     if (model != null) model.itemsChanged();
   }
 
+  @eventHandler
   void destroyItemAction(e, detail) {
     model.destroyItem(detail);
+    notifyPath('model.items', model.items);
+    notifyPath('model.filtered', model.filtered);
   }
 
-  void toggleAllCompletedAction(e, detail, sender) {
-    model.setItemsCompleted(sender.checked);
+  @eventHandler
+//  void toggleAllCompletedAction(e, detail, sender) {
+  void toggleAllCompletedAction(e, detail) {
+    model.setItemsCompleted(e.target.checked);
   }
 
-  void clearCompletedAction() {
+  @eventHandler
+  void clearCompletedAction(_, __) {
     model.clearItems();
+    notifyPath('model.items', model.items);
+    notifyPath('model.filtered', model.filtered);
   }
 
   // TODO(jmesserly): workaround for HTML Imports not setting correct baseURI
-  String get baseUri =>
-      element.element.ownerDocument == document ? '../' : '';
+//  String get baseUri =>
+//      element.element.ownerDocument == document ? '../' : '';
 }

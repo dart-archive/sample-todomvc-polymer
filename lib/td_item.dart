@@ -1,27 +1,38 @@
+@HtmlImport('td_item.html')
 library todomvc.td_item;
 
+import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
+import 'package:web_components/web_components.dart';
 import 'td_model.dart';
+import 'td_input.dart';
 
-@CustomTag('td-item')
-class TodoItem extends LIElement with Polymer, Observable {
-  @published bool editing = false;
-  @published Todo item;
+@PolymerElement('td-item', extendsTag: 'li')
+class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
+  @Property(notify: true) bool editing = false;
+  @Property(notify: true) Todo item;
 
   factory TodoItem() => new Element.tag('li', 'td-item');
-  TodoItem.created() : super.created() { polymerCreated(); }
-
-  editAction() {
-    editing = true;
-    // schedule focus for the end of microtask, when the input will be visible
-    async((_) => $['edit'].focus());
+  TodoItem.created() : super.created() {
+    polymerCreated();
+    on['blur'].listen(commitAction);
   }
 
-  commitAction() {
+  @eventHandler
+  editAction([_, __]) {
+    set('editing', true);
+    // schedule focus for the end of microtask, when the input will be visible
+    new Future(() {}).then((_) {
+      $['edit'].focus();
+    });
+  }
+
+  @eventHandler
+  commitAction([_, __]) {
     if (editing) {
-      editing = false;
-      item.title = item.title.trim();
+      set('editing', false);
+      set('item.title', item.title.trim());
       if (item.title == '') {
         destroyAction();
       }
@@ -29,17 +40,22 @@ class TodoItem extends LIElement with Polymer, Observable {
     }
   }
 
-  cancelAction() {
-    editing = false;
+  @eventHandler
+  cancelAction([_, __]) {
+    set('editing', false);
   }
 
-  itemChangeAction() {
+  @eventHandler
+  itemChangeAction([_, __]) {
     // TODO(jmesserly): asyncFire is needed because "click" fires before
     // "item.checked" is updated on Firefox. Need to check Polymer.js.
-    asyncFire('td-item-changed');
+    new Future(() {}).then((_) {
+      fire('td-item-changed');
+    });
   }
 
-  destroyAction() {
+  @eventHandler
+  destroyAction([_, __]) {
     fire('td-destroy-item', detail: item);
   }
 }

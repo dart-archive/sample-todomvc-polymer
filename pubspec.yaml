@@ -4,8 +4,9 @@ version: 0.15.1
 dependencies:
   polymer: ">=0.15.0 <0.17.0"
   core_elements: ">= 0.4.0 <0.7.0"
+  web_components: any
 transformers:
-- polymer:
+- web_components:
     entry_points:
     - web/index.html
     - test/listorder_test.html
@@ -16,3 +17,11 @@ dev_dependencies:
   unittest: ">=0.10.0 <0.11.0"
 environment:
   sdk: ">=1.2.0 <2.0.0"
+
+dependency_overrides:
+  polymer:
+    path: '../polymer-dart'
+  polymer_interop:
+    path: '../polymer-interop'
+  web_components:
+    path: '../web-components'

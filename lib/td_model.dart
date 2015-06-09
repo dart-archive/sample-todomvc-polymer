@@ -1,12 +1,13 @@
 library todomvc.td_model;
 
+import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
-import 'package:polymer/polymer.dart';
-import 'package:core_elements/core_localstorage_dart.dart';
+import 'package:polymer/polymer_micro.dart';
 
-class Todo extends Observable {
-  @observable String title;
-  @observable bool completed = false;
+class Todo extends Object with JsProxy {
+  String title;
+  bool completed = false;
 
   Todo(this.title);
 
@@ -18,97 +19,108 @@ class Todo extends Observable {
   String toString() => "$title (${completed ? '' : 'not '}done)";
 }
 
-@CustomTag('td-model')
-class TodoModel extends PolymerElement {
-  @published ObservableList<Todo> items;
-  @published Iterable<Todo> filtered;
-  @published String storageId;
+@PolymerElement('td-model')
+class TodoModel extends PolymerMicroElement {
+  @Property(notify: true, observer: 'itemsChanged')
+  List<Todo> items;
+  @Property(notify: true, computed: 'filterItems(items.*)')
+  Iterable<Todo> filtered;
+  @Property(notify: true, observer: 'storageIdChanged')
+  String storageId = 'storage';
 
-  @observable int completedCount = 0;
-  @observable int activeCount = 0;
-  @observable bool allCompleted = false;
-  @observable CoreLocalStorage storage;
-  @observable String filter;
-  @observable String activeItemWord;
+  @Property(notify: true, computed: 'countCompleted(items.*)')
+  int completedCount;
+  @Property(notify: true, computed: 'countActive(items.*)')
+  int activeCount;
+  @Property(notify: true,
+      computed: 'checkAllCompleted(completedCount, activeCount)')
+  bool allCompleted;
+  @Property(notify: true, computed: 'getActiveItemWord(activeCount)')
+  String activeItemWord;
+  @Property(notify: true, observer: 'filterChanged')
+  String filter;
+
+  Storage storage = window.localStorage;
 
   final filters = {
     'active': (item) => !item.completed,
-    'completed': (item) => item.completed
+    'completed': (item) => item.completed,
   };
 
   factory TodoModel() => new Element.tag('td-model');
   TodoModel.created() : super.created();
 
-  void ready() {
-    async((_) {
-      if (items == null && storage == null) {
-        items = new ObservableList<Todo>();
-      }
-    });
+  @eventHandler
+  void filterChanged([_, __]) {
+    set('filtered', filterItems());
   }
 
+  @eventHandler
+  int countActive(_) => items.where(filters['active']).length;
 
-  void filterChanged() {
-    filterItems();
-  }
+  @eventHandler
+  int countCompleted(_) => items.where(filters['completed']).length;
 
-  void itemsChanged() {
-    completedCount = items.where(filters['completed']).length;
-    activeCount = items.length - completedCount;
-    allCompleted = completedCount > 0 && activeCount == 0;
+  @eventHandler
+  bool checkAllCompleted(completedCount, activeCount) =>
+      completedCount > 0 && activeCount == 0;
 
-    filterItems();
-    if (storage != null) {
-      storage.value = items;
-      storage.save();
+  @eventHandler
+  String getActiveItemWord(int activeCount) =>
+      activeCount == 1 ? 'item' : 'items';
+
+  @eventHandler
+  void itemsChanged([_, __]) {
+    set('filtered', filterItems());
+    if (storage != null && storageId != null) {
+      storage[storageId] = JSON.encode(items);
     }
-
-    // TODO(jmesserly): polymer_expressions lacks ternary operator.
-    activeItemWord = activeCount == 1 ? 'item' : 'items';
   }
 
-  void storageIdChanged() {
-    storage = document.querySelector('#$storageId');
-    if (storage == null) return;
-    if (storage.loaded) {
-      _setItems();
-    } else {
-      storage.on['core-localstorage-load'].take(1).listen((_) => _setItems());
-    }
+  // TODO(jakemac): Add change listeners!.
+  @eventHandler
+  void storageIdChanged([_, __]) {
+    _setItems();
   }
   
   void _setItems() {
-    if (storage.value == null) {
-      items = toObservable([]);
-      return;
+    if (storage[storageId] == null) {
+      set('items', []);
+    } else {
+      set('items', JSON.decode(
+          storage[storageId]).map((i) => new Todo.fromJson(i)).toList());
     }
-    items = toObservable(storage.value.map((i) => new Todo.fromJson(i)));
+    itemsChanged();
   }
 
-  void filterItems() {
+  @eventHandler
+  Iterable<Todo> filterItems() {
     var fn = filters[filter];
-    filtered = fn != null ? items.where(fn) : items;
+    return fn != null ? items.where(fn) : items;
   }
 
   void newItem(String title) {
     title = title.trim();
     if (title != '') {
-      items.add(new Todo(title));
-      itemsChanged();
+      add('items', new Todo(title));
     }
+    itemsChanged();
   }
 
   void destroyItem(Todo item) {
-    if (items.remove(item)) itemsChanged();
+    removeItem('items', item);
+    itemsChanged();
   }
 
   void clearItems() {
-    items.removeWhere(filters['completed']);
+    var filter = filters['completed'];
+    removeWhere('items', filter);
+    itemsChanged();
   }
 
   void setItemsCompleted(bool completed) {
-    for (var item in items) {
-      item.completed = completed;
+    for (var i = 0; i < items.length; i++) {
+      set('items.$i.completed', completed);
     }
     itemsChanged();
   }
