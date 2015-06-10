@@ -3,6 +3,7 @@ library todomvc.td_todos;
 
 import 'dart:convert';
 import 'dart:html';
+import 'dart:js';
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
 import 'todo.dart';
@@ -17,9 +18,6 @@ class TodoList extends PolymerStandardElement {
 
   @Property(notify: true, observer: 'itemsChanged')
   List<Todo> items;
-
-  @Property(notify: true, computed: 'filterItems(items.*)')
-  Iterable<Todo> filtered;
 
   @Property(notify: true, observer: 'storageIdChanged')
   String storageId = 'storage';
@@ -93,11 +91,6 @@ class TodoList extends PolymerStandardElement {
   }
 
   @eventHandler
-  void filterChanged([_, __]) {
-    set('filtered', filterItems());
-  }
-
-  @eventHandler
   int countActive(_) => items.where(filters['active']).length;
 
   @eventHandler
@@ -113,7 +106,6 @@ class TodoList extends PolymerStandardElement {
 
   @Observe('items.*')
   void itemsChanged() {
-    set('filtered', filterItems());
     if (storage != null && storageId != null) {
       storage[storageId] = JSON.encode(items);
     }
@@ -121,8 +113,26 @@ class TodoList extends PolymerStandardElement {
 
   // TODO(jakemac): Add change listeners!.
   @eventHandler
-  void storageIdChanged([_, __]) {
+  void storageIdChanged() {
     _setItems();
+  }
+
+  @eventHandler
+  filterChanged() {
+    new JsObject.fromBrowserObject($['todo-repeat']).callMethod('render');
+  }
+
+  @eventHandler
+  void filterAction(MouseEvent e, detail) {
+    AnchorElement target = e.target;
+    set('filter', target.text.toLowerCase());
+    for (var child in  ($['filters'] as DivElement).children) {
+      if (child == target.parent) {
+        child.classes.add('selected');
+      } else {
+        child.classes.remove('selected');
+      }
+    }
   }
 
   void _setItems() {
@@ -134,10 +144,11 @@ class TodoList extends PolymerStandardElement {
     }
   }
 
+  /// Dynamically filter items based on the current value of `filter`.
   @eventHandler
-  List<Todo> filterItems() {
-    var fn = filters[filter];
-    return new List.from(fn != null ? items.where(fn) : items);
+  bool itemsFilter(Todo item) {
+    var filterFn = filters[filter];
+    return filterFn != null ? filterFn(item) : true;
   }
 
   void newItem(String title) {

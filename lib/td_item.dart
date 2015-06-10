@@ -10,8 +10,11 @@ import 'td_input.dart';
 
 @PolymerElement('td-item', extendsTag: 'li')
 class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
-  @Property(notify: true) bool editing = false;
-  @Property(notify: true) Todo item;
+  @property
+  bool editing = false;
+
+  @Property(notify: true)
+  Todo item;
 
   factory TodoItem() => new Element.tag('li', 'td-item');
   TodoItem.created() : super.created() {

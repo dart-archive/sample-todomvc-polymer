@@ -225,7 +225,7 @@
       text-decoration: none;
     }
 
-    #filters li.polymer-selected a {
+    #filters li.selected a {
       font-weight: bold;
     }
 
@@ -282,8 +282,7 @@
                on-change="toggleAllCompletedAction">
         <label for="toggle-all">Mark all as complete</label>
         <ul id="todo-list" on-td-destroy-item="destroyItemAction">
-          <!--<template is="dom-repeat" items="{{filtered}}">-->
-          <template is="dom-repeat" items="{{items}}">
+          <template id="todo-repeat" is="dom-repeat" items="{{items}}" filter="itemsFilter" observe="filter completed">
             <li is="td-item" item="{{item}}"></li>
           </template>
         </ul>
@@ -291,17 +290,17 @@
       <footer id="footer" hidden?="{{items.isEmpty}}">
         <span id="todo-count"><strong>{{activeCount}}</strong>
             <span>{{activeItemWord}}</span> left</span>
-        <!--<core-selector id="filters" selected="{{activeRoute}}">-->
-          <!--<li label="all">-->
-            <!--<a _href="{{baseUri}}#/">All</a>-->
-          <!--</li>-->
-          <!--<li label="active">-->
-            <!--<a _href="{{baseUri}}#/active">Active</a>-->
-          <!--</li>-->
-          <!--<li label="completed">-->
-            <!--<a _href="{{baseUri}}#/completed">Completed</a>-->
-          <!--</li>-->
-        <!--</core-selector>-->
+        <div id="filters" on-click="filterAction">
+          <li label="all" class="selected">
+            <a _href="{{baseUri}}#/">All</a>
+          </li>
+          <li label="active">
+            <a _href="{{baseUri}}#/active">Active</a>
+          </li>
+          <li label="completed">
+            <a _href="{{baseUri}}#/completed">Completed</a>
+          </li>
+        </div>
         <button hidden?="{{completedEmpty}}" id="clear-completed"
             on-click="clearCompletedAction">Clear completed
             (<span>{{completedCount}}</span>)</button>
