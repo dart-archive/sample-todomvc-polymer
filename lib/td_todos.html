@@ -276,21 +276,21 @@
             autofocus on-td-input-commit="addTodoAction"
             on-td-input-cancel="cancelAddTodoAction">
       </header>
-      <section id="main" hidden?="{{model.items.isEmpty}}">
+      <section id="main" hidden?="{{items.isEmpty}}">
         <input id="toggle-all" type="checkbox"
-               checked="{{model.allCompleted}}"
+               checked="{{allCompleted}}"
                on-change="toggleAllCompletedAction">
         <label for="toggle-all">Mark all as complete</label>
-        <ul id="todo-list" on-td-item-changed="itemChangedAction"
-            on-td-destroy-item="destroyItemAction">
-          <template is="dom-repeat" items="{{model.filtered}}">
+        <ul id="todo-list" on-td-destroy-item="destroyItemAction">
+          <!--<template is="dom-repeat" items="{{filtered}}">-->
+          <template is="dom-repeat" items="{{items}}">
             <li is="td-item" item="{{item}}"></li>
           </template>
         </ul>
       </section>
-      <footer id="footer" hidden?="{{model.items.isEmpty}}">
-        <span id="todo-count"><strong>{{model.activeCount}}</strong>
-            <span>{{model.activeItemWord}}</span> left</span>
+      <footer id="footer" hidden?="{{items.isEmpty}}">
+        <span id="todo-count"><strong>{{activeCount}}</strong>
+            <span>{{activeItemWord}}</span> left</span>
         <!--<core-selector id="filters" selected="{{activeRoute}}">-->
           <!--<li label="all">-->
             <!--<a _href="{{baseUri}}#/">All</a>-->
@@ -302,9 +302,9 @@
             <!--<a _href="{{baseUri}}#/completed">Completed</a>-->
           <!--</li>-->
         <!--</core-selector>-->
-        <button hidden?="{{modelCompletedEmpty}}" id="clear-completed"
+        <button hidden?="{{completedEmpty}}" id="clear-completed"
             on-click="clearCompletedAction">Clear completed
-            (<span>{{model.completedCount}}</span>)</button>
+            (<span>{{completedCount}}</span>)</button>
       </footer>
     </section>
   </template>

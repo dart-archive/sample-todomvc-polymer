@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
-import 'td_model.dart';
+import 'todo.dart';
 import 'td_input.dart';
 
 @PolymerElement('td-item', extendsTag: 'li')
@@ -36,22 +36,12 @@ class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
       if (item.title == '') {
         destroyAction();
       }
-      fire('td-item-changed');
     }
   }
 
   @eventHandler
   cancelAction([_, __]) {
     set('editing', false);
-  }
-
-  @eventHandler
-  itemChangeAction([_, __]) {
-    // TODO(jmesserly): asyncFire is needed because "click" fires before
-    // "item.checked" is updated on Firefox. Need to check Polymer.js.
-    new Future(() {}).then((_) {
-      fire('td-item-changed');
-    });
   }
 
   @eventHandler
