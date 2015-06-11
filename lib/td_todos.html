@@ -269,7 +269,6 @@
     }
   </style>
   <template>
-    <!--<simple-router on-route="{{routeAction}}"></simple-router>-->
     <section id="todoapp">
       <header id="header">
         <input is="td-input" id="new-todo" placeholder="What needs to be done?"
@@ -291,14 +290,14 @@
         <span id="todo-count"><strong>{{activeCount}}</strong>
             <span>{{activeItemWord}}</span> left</span>
         <div id="filters" on-click="filterAction">
-          <li label="all" class="selected">
-            <a _href="{{baseUri}}#/">All</a>
+          <li label="" class="selected">
+            <a>All</a>
           </li>
           <li label="active">
-            <a _href="{{baseUri}}#/active">Active</a>
+            <a>Active</a>
           </li>
           <li label="completed">
-            <a _href="{{baseUri}}#/completed">Completed</a>
+            <a>Completed</a>
           </li>
         </div>
         <button hidden?="{{completedEmpty}}" id="clear-completed"

@@ -164,9 +164,9 @@
   </style>
   <template>
     <!--<div class="view {{ {'completed': item.completed, 'editing': editing} }}"-->
-    <div class="view" hidden="{{editing}}" on-dblclick="editAction">
+    <div class="view" hidden="{{editing}}">
       <input type="checkbox" class="toggle" checked="{{item.completed::change}}" id="completed">
-      <label>{{item.title}}</label>
+      <label on-dblclick="editAction">{{item.title}}</label>
       <button class="destroy" on-click="destroyAction"></button>
     </div>
     <input is="td-input" id="edit" class="edit" value="{{item.title::input}}"

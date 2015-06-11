@@ -46,23 +46,17 @@ class TodoList extends PolymerStandardElement {
     'completed': (item) => item.completed,
   };
 
-//  @Property(notify: true)
-//  String activeRoute;
-
   factory TodoList() => new Element.tag('td-todos');
   TodoList.created() : super.created();
+
+  void ready() {
+    set('filter', window.location.hash.replaceFirst('#', ''));
+  }
 
   TodoInput get _newTodo => $['new-todo'];
 
   @eventHandler
   bool isEmpty() => completedCount == 0;
-
-//  void routeAction(e, route) {
-//    if (model != null) model.filter = route;
-//
-//    // TODO(jmesserly): polymer_expressions lacks boolean conversions.
-//    activeRoute = (route != null && route != '') ? route : 'all';
-//  }
 
   @eventHandler
   void addTodoAction(_, __) {
@@ -120,19 +114,19 @@ class TodoList extends PolymerStandardElement {
   @eventHandler
   filterChanged() {
     new JsObject.fromBrowserObject($['todo-repeat']).callMethod('render');
+    window.location.hash = filter;
+    for (Element li in $['filters'].querySelectorAll('li')) {
+      if (li.attributes['label'] == filter) {
+        li.classes.add('selected');
+      } else {
+        li.classes.remove('selected');
+      }
+    }
   }
 
   @eventHandler
   void filterAction(MouseEvent e, detail) {
-    AnchorElement target = e.target;
-    set('filter', target.text.toLowerCase());
-    for (var child in  ($['filters'] as DivElement).children) {
-      if (child == target.parent) {
-        child.classes.add('selected');
-      } else {
-        child.classes.remove('selected');
-      }
-    }
+    set('filter', (e.target as Element).parent.attributes['label']);
   }
 
   void _setItems() {
