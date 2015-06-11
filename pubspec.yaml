@@ -14,6 +14,8 @@ transformers:
 #    - test/markdone_test.html
 #    - test/markdone_shadow_test.html
 #    - test/mainpage_test.html
+- $dart2js:
+    minify: true
 dev_dependencies:
   unittest: ">=0.10.0 <0.11.0"
 environment:
