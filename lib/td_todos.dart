@@ -6,38 +6,38 @@ import 'dart:html';
 import 'dart:js';
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart' show HtmlImport;
-import 'todo.dart';
 import 'td_input.dart';
 import 'td_item.dart';
-//import 'router/simple_router.dart';
+import 'todo.dart';
 
-@PolymerElement('td-todos')
-class TodoList extends PolymerStandardElement {
-  @Property(computed: 'isEmpty(completedCount)')
+@PolymerRegister('td-todos')
+class TodoList extends PolymerElement {
+  @Property(computed: 'isZero(completedCount)')
   bool completedEmpty;
 
-  @Property(notify: true, observer: 'itemsChanged')
+  @Property(computed: 'itemsIsNotEmpty(items.*)')
+  bool anyItems;
+
+  @Property(observer: 'itemsChanged')
   List<Todo> items;
 
-  @Property(notify: true, observer: 'storageIdChanged')
+  @Property(observer: 'storageIdChanged')
   String storageId = 'storage';
 
-  @Property(notify: true, computed: 'countCompleted(items.*)')
+  @Property(computed: 'countCompleted(items.*)')
   int completedCount;
 
-  @Property(notify: true, computed: 'countActive(items.*)')
+  @Property(computed: 'countActive(items.*)')
   int activeCount;
 
-  @Property(
-      notify: true,
-      computed: 'checkAllCompleted(completedCount, activeCount)')
+  @Property(computed: 'checkAllCompleted(completedCount, activeCount)')
   bool allCompleted;
 
-  @Property(notify: true, computed: 'getActiveItemWord(activeCount)')
+  @Property(computed: 'getActiveItemWord(activeCount)')
   String activeItemWord;
 
-  @Property(notify: true, observer: 'filterChanged')
-  String filter;
+  @Property(observer: 'filterChanged')
+  String filter = window.location.hash.replaceFirst('#', '');
 
   Storage storage = window.localStorage;
 
@@ -49,14 +49,13 @@ class TodoList extends PolymerStandardElement {
   factory TodoList() => new Element.tag('td-todos');
   TodoList.created() : super.created();
 
-  void ready() {
-    set('filter', window.location.hash.replaceFirst('#', ''));
-  }
-
   TodoInput get _newTodo => $['new-todo'];
 
   @eventHandler
-  bool isEmpty() => completedCount == 0;
+  bool itemsIsNotEmpty() => items.isNotEmpty;
+
+  @eventHandler
+  bool isZero(int value) => value == 0;
 
   @eventHandler
   void addTodoAction() {
@@ -91,21 +90,20 @@ class TodoList extends PolymerStandardElement {
   int countCompleted() => items.where(filters['completed']).length;
 
   @eventHandler
-  bool checkAllCompleted(int completedCount, int activeCount) =>
-      completedCount > 0 && activeCount == 0;
+  bool checkAllCompleted() {
+    return completedCount > 0 && activeCount == 0;
+  }
 
   @eventHandler
-  String getActiveItemWord(int activeCount) =>
-      activeCount == 1 ? 'item' : 'items';
+  String getActiveItemWord() => activeCount == 1 ? 'item' : 'items';
 
   @Observe('items.*')
   void itemsChanged() {
-    if (storage != null && storageId != null) {
+    if (storageId != null) {
       storage[storageId] = JSON.encode(items);
     }
   }
 
-  // TODO(jakemac): Add change listeners!.
   @eventHandler
   void storageIdChanged() {
     _setItems();
@@ -113,6 +111,7 @@ class TodoList extends PolymerStandardElement {
 
   @eventHandler
   filterChanged() {
+    // TODO(jakemac): Provide a proxy for dom-repeat elements.
     new JsObject.fromBrowserObject($['todo-repeat']).callMethod('render');
     window.location.hash = filter;
     for (Element li in $['filters'].querySelectorAll('li')) {
@@ -127,7 +126,7 @@ class TodoList extends PolymerStandardElement {
   @eventHandler
   void filterAction(MouseEvent e) {
     if (e.target is! AnchorElement) return;
-    final target = e.target as AnchorElement;
+    var target = e.target as AnchorElement;
     set('filter', target.parent.attributes['label']);
   }
 
@@ -140,7 +139,6 @@ class TodoList extends PolymerStandardElement {
     }
   }
 
-  /// Dynamically filter items based on the current value of `filter`.
   @eventHandler
   bool itemsFilter(Todo item) {
     var filterFn = filters[filter];

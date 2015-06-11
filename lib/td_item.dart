@@ -8,18 +8,22 @@ import 'package:web_components/web_components.dart';
 import 'todo.dart';
 import 'td_input.dart';
 
-@PolymerElement('td-item', extendsTag: 'li')
-class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
+@PolymerRegister('td-item', extendsTag: 'li')
+class TodoItem extends LIElement with PolymerMixin, JsProxy {
   @property
   bool editing = false;
 
+  // Need to notify parent when we modify the item, since whether its completed
+  // or not affects its visibility based on the current filter.
   @Property(notify: true)
   Todo item;
+
+  @Property(computed: 'getClassString(editing, item.completed)')
+  String classString;
 
   factory TodoItem() => new Element.tag('li', 'td-item');
   TodoItem.created() : super.created() {
     polymerCreated();
-    on['blur'].listen(commitAction);
   }
 
   @eventHandler
@@ -32,7 +36,7 @@ class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
   }
 
   @eventHandler
-  commitAction([_]) {
+  commitAction() {
     if (editing) {
       set('editing', false);
       set('item.title', item.title.trim());
@@ -51,4 +55,8 @@ class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
   destroyAction() {
     fire('td-destroy-item', detail: item);
   }
+
+  @eventHandler
+  String getClassString() =>
+      'view${editing ? ' editing' : ''}${item.completed ? ' completed' : ''}';
 }

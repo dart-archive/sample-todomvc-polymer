@@ -23,6 +23,7 @@ main() async {
 
       // For TodoList
       #completedEmpty: (o) => o.completedEmpty,
+      #anyItems: (o) => o.anyItems,
       #items: (o) => o.items,
       #storageId: (o) => o.storageId,
       #completedCount: (o) => o.completedCount,
@@ -30,7 +31,8 @@ main() async {
       #allCompleted: (o) => o.allCompleted,
       #activeItemWord: (o) => o.activeItemWord,
       #filter: (o) => o.filter,
-      #isEmpty: (o) => o.isEmpty,
+      #isZero: (o) => o.isZero,
+      #itemsIsNotEmpty: (o) => o.itemsIsNotEmpty,
       #addTodoAction: (o) => o.addTodoAction,
       #cancelAddTodoAction: (o) => o.cancelAddTodoAction,
       #destroyItemAction: (o) => o.destroyItemAction,
@@ -53,13 +55,20 @@ main() async {
       // For TodoItem
       #editing: (o) => o.editing,
       #item: (o) => o.item,
+      #classString: (o) => o.classString,
       #editAction: (o) => o.editAction,
       #commitAction: (o) => o.commitAction,
       #cancelAction: (o) => o.cancelAction,
       #destroyAction: (o) => o.destroyAction,
+      #getClassString: (o) => o.getClassString,
+
+      // For TodoInput
+      #keyPressAction: (o) => o.keyPressAction,
+      #keyUpAction: (o) => o.keyUpAction,
     },
     setters: {
       #completedEmpty: (o, v) { o.completedEmpty = v; },
+      #anyItems: (o, v) { o.anyItems = v; },
       #items: (o, v) { o.items = v; },
       #storageId: (o, v) { o.storageId = v; },
       #completedCount: (o, v) { o.completedCount = v; },
@@ -71,6 +80,7 @@ main() async {
       #completed: (o, v) { o.completed = v; },
       #editing: (o, v) { o.editing = v; },
       #item: (o, v) { o.item = v; },
+      #classString: (o, v) { o.classString = v; },
     },
     parents: {
       Todo: _M0,
@@ -78,11 +88,13 @@ main() async {
       TodoList: _M0,
       TodoItem: _M0,
       Observe: EventHandler,
+      Listen: EventHandler,
       EventHandler: _M0,
     },
     declarations: {
       TodoList: {
-        #completedEmpty: const Declaration(#completedEmpty, bool, annotations: const [const Property(computed: 'isEmpty(completedCount)')]),
+        #completedEmpty: const Declaration(#completedEmpty, bool, annotations: const [const Property(computed: 'isZero(completedCount)')]),
+        #anyItems: const Declaration(#anyItems, bool, annotations: const [const Property(computed: 'itemsIsNotEmpty(items.*)')]),
         #items: const Declaration(#items, List, annotations: const [const Property(notify: true, observer: 'itemsChanged')]),
         #storageId: const Declaration(#storageId, String, annotations: const[const Property(notify: true, observer: 'storageIdChanged')]),
         #completedCount: const Declaration(#completedCount, int, annotations: const[const Property(notify: true, computed: 'countCompleted(items.*)')]),
@@ -90,8 +102,8 @@ main() async {
         #allCompleted: const Declaration(#allCompleted, bool, annotations: const[const Property(notify: true, computed: 'checkAllCompleted(completedCount, activeCount)')]),
         #activeItemWord: const Declaration(#activeItemWord, String, annotations: const[const Property(notify: true, computed: 'getActiveItemWord(activeCount)')]),
         #filter: const Declaration(#filter, String, annotations: const[const Property(notify: true, observer: 'filterChanged')]),
-        #ready: const Declaration(#ready, Function, kind: METHOD),
-        #isEmpty: const Declaration(#isEmpty, Function, kind: METHOD, annotations: const[eventHandler]),
+        #isZero: const Declaration(#isZero, Function, kind: METHOD, annotations: const[eventHandler]),
+        #itemsIsNotEmpty: const Declaration(#itemsIsNotEmpty, Function, kind: METHOD, annotations: const[eventHandler]),
         #addTodoAction: const Declaration(#addTodoAction, Function, kind: METHOD, annotations: const[eventHandler]),
         #cancelAddTodoAction: const Declaration(#cancelAddTodoAction, Function, kind: METHOD, annotations: const[eventHandler]),
         #destroyItemAction: const Declaration(#destroyItemAction, Function, kind: METHOD, annotations: const[eventHandler]),
@@ -114,12 +126,16 @@ main() async {
       TodoItem: {
         #editing: const Declaration(#editing, bool, annotations: const[property]),
         #item: const Declaration(#item, Todo, annotations: const[const Property(notify: true)]),
+        #classString: const Declaration(#classString, String, annotations: const[const Property(computed: 'getClassString(editing, item.completed)')]),
         #editAction: const Declaration(#editAction, Function, kind: METHOD, annotations: const[eventHandler]),
         #commitAction: const Declaration(#commitAction, Function, kind: METHOD, annotations: const[eventHandler]),
         #cancelAction: const Declaration(#cancelAction, Function, kind: METHOD, annotations: const[eventHandler]),
         #destroyAction: const Declaration(#destroyAction, Function, kind: METHOD, annotations: const[eventHandler]),
+        #getClassString: const Declaration(#getClassString, Function, kind: METHOD, annotations: const[eventHandler]),
       },
       TodoInput: {
+        #keyPressAction: const Declaration(#keyPressAction, Function, kind: METHOD, annotations: const[const Listen('keypress')]),
+        #keyUpAction: const Declaration(#keyUpAction, Function, kind: METHOD, annotations: const[const Listen('keyup')]),
       },
     },
     names:  {
@@ -130,6 +146,7 @@ main() async {
 
       // For TodoList
       #completedEmpty: 'completedEmpty',
+      #anyItems: 'anyItems',
       #items: 'items',
       #storageId: 'storageId',
       #completedCount: 'completedCount',
@@ -137,7 +154,8 @@ main() async {
       #allCompleted: 'allCompleted',
       #activeItemWord: 'activeItemWord',
       #filter: 'filter',
-      #isEmpty: 'isEmpty',
+      #itemsIsNotEmpty: 'itemsIsNotEmpty',
+      #isZero: 'isZero',
       #addTodoAction: 'addTodoAction',
       #cancelAddTodoAction: 'cancelAddTodoAction',
       #destroyItemAction: 'destroyItemAction',
@@ -160,10 +178,16 @@ main() async {
       // For TodoItem
       #editing: 'editing',
       #item: 'item',
+      #classString: 'classString',
       #editAction: 'editAction',
       #commitAction: 'commitAction',
       #cancelAction: 'cancelAction',
       #destroyAction: 'destroyAction',
+      #getClassString: 'getClassString',
+
+      // For TodoInput
+      #keyPressAction: 'keyPressAction',
+      #keyUpAction: 'keyUpAction',
     }
   ));
   await initPolymer();

@@ -4,6 +4,7 @@ import 'package:polymer/polymer_micro.dart';
 
 class Todo extends Object with JsProxy {
   String title;
+
   bool completed = false;
 
   Todo(this.title);
