@@ -23,7 +23,7 @@ class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
   }
 
   @eventHandler
-  editAction([_, __]) {
+  editAction() {
     set('editing', true);
     // schedule focus for the end of microtask, when the input will be visible
     new Future(() {}).then((_) {
@@ -32,7 +32,7 @@ class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
   }
 
   @eventHandler
-  commitAction([_, __]) {
+  commitAction([_]) {
     if (editing) {
       set('editing', false);
       set('item.title', item.title.trim());
@@ -43,12 +43,12 @@ class TodoItem extends LIElement with PolymerJsMixin, JsProxy {
   }
 
   @eventHandler
-  cancelAction([_, __]) {
+  cancelAction() {
     set('editing', false);
   }
 
   @eventHandler
-  destroyAction([_, __]) {
+  destroyAction() {
     fire('td-destroy-item', detail: item);
   }
 }

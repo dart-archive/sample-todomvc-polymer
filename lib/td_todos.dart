@@ -59,13 +59,13 @@ class TodoList extends PolymerStandardElement {
   bool isEmpty() => completedCount == 0;
 
   @eventHandler
-  void addTodoAction(_, __) {
+  void addTodoAction() {
     newItem(_newTodo.value);
     _newTodo.value = '';
   }
 
   @eventHandler
-  void cancelAddTodoAction(_, __) {
+  void cancelAddTodoAction() {
     _newTodo.value = '';
   }
 
@@ -75,28 +75,28 @@ class TodoList extends PolymerStandardElement {
   }
 
   @eventHandler
-  void toggleAllCompletedAction(e, detail) {
+  void toggleAllCompletedAction(e) {
     setItemsCompleted(e.target.checked);
   }
 
   @eventHandler
-  void clearCompletedAction(_, __) {
+  void clearCompletedAction() {
     clearItems();
   }
 
   @eventHandler
-  int countActive(_) => items.where(filters['active']).length;
+  int countActive() => items.where(filters['active']).length;
 
   @eventHandler
-  int countCompleted(_) => items.where(filters['completed']).length;
+  int countCompleted() => items.where(filters['completed']).length;
 
   @eventHandler
-  bool checkAllCompleted(completedCount, activeCount) =>
-  completedCount > 0 && activeCount == 0;
+  bool checkAllCompleted(int completedCount, int activeCount) =>
+      completedCount > 0 && activeCount == 0;
 
   @eventHandler
   String getActiveItemWord(int activeCount) =>
-  activeCount == 1 ? 'item' : 'items';
+      activeCount == 1 ? 'item' : 'items';
 
   @Observe('items.*')
   void itemsChanged() {
@@ -125,8 +125,10 @@ class TodoList extends PolymerStandardElement {
   }
 
   @eventHandler
-  void filterAction(MouseEvent e, detail) {
-    set('filter', (e.target as Element).parent.attributes['label']);
+  void filterAction(MouseEvent e) {
+    if (e.target is! AnchorElement) return;
+    final target = e.target as AnchorElement;
+    set('filter', target.parent.attributes['label']);
   }
 
   void _setItems() {
@@ -165,8 +167,4 @@ class TodoList extends PolymerStandardElement {
       set('items.$i.completed', completed);
     }
   }
-
-  // TODO(jmesserly): workaround for HTML Imports not setting correct baseURI
-//  String get baseUri =>
-//      element.element.ownerDocument == document ? '../' : '';
 }

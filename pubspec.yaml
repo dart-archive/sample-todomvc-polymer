@@ -2,17 +2,18 @@ name: todomvc
 description: TodoMVC built with the polymer.dart package
 version: 0.15.1
 dependencies:
-  polymer: ">=0.15.0 <0.17.0"
-  core_elements: ">= 0.4.0 <0.7.0"
+  polymer:
+    path: '../polymer-dart'
   web_components: any
+  browser: any
 transformers:
 - web_components:
     entry_points:
     - web/index.html
-    - test/listorder_test.html
-    - test/markdone_test.html
-    - test/markdone_shadow_test.html
-    - test/mainpage_test.html
+#    - test/listorder_test.html
+#    - test/markdone_test.html
+#    - test/markdone_shadow_test.html
+#    - test/mainpage_test.html
 dev_dependencies:
   unittest: ">=0.10.0 <0.11.0"
 environment:
