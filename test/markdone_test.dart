@@ -9,19 +9,19 @@ import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
-import 'package:todomvc/td_model.dart';
-import 'utils.dart';
+import 'package:todomvc/td_todos.dart';
+import 'package:todomvc/todo.dart';
 
-Node findWithText(Node node, String text) {
+Node findWithText(node, String text) {
   if (node.text == text) return node;
-  if (node is Element && node.localName == 'polymer-element') {
+  if (node is Element && node.localName == 'dom-module') {
     return null;
   }
-  if (node is Element && node.shadowRoot != null) {
-    var r = findWithText(node.shadowRoot, text);
+  if (node is PolymerMixin && Polymer.dom((node as PolymerMixin).root) != null) {
+    var r = findWithText(Polymer.dom(node.root), text);
     if (r != null) return r;
   }
-  for (var n in node.nodes) {
+  for (var n in node.childNodes) {
     var r = findWithText(n, text);
     if (r != null) return r;
   }
@@ -32,31 +32,35 @@ Node findWithText(Node node, String text) {
  * This test runs the TodoMVC app, adds a few todos, marks some as done
  * programatically, and clicks on a checkbox to mark others via the UI.
  */
-main() {
-  initPolymer();
+main() async {
+  await initPolymer();
   useHtmlConfiguration();
 
-  TodoModel model;
+  TodoList todoList;
 
-  setUp(() => Polymer.onReady.then((_) {
-    model = querySelector('td-model');
-    return onPropertyInit(model, 'items');
-  }));
+  setUp(() {
+    todoList = querySelector('td-todos');
+  });
+
+  tearDown(() {
+    todoList.clear('items');
+  });
 
   test('mark done', () {
-    model.items
-        ..add(new Todo('one (unchecked)'))
-        ..add(new Todo('two (unchecked)'))
-        ..add(new Todo('three (checked)')..completed = true)
-        ..add(new Todo('four (checked)'));
+    todoList.addAll('items', [
+      new Todo('one (unchecked)'),
+      new Todo('two (unchecked)'),
+      new Todo('three (checked)')..completed = true,
+      new Todo('four (checked)'),
+    ]);
 
     return new Future(() {
-      var body = querySelector('body');
+      var body = Polymer.dom(document.body);
 
       var label = findWithText(body, 'four (checked)');
       expect(label is LabelElement, true, reason: 'text is in a label: $label');
 
-      ShadowRoot host = label.parentNode.parentNode;
+      PolymerDom host = Polymer.dom(label.parentNode.parentNode.root);
       var node = host.querySelector('input');
       expect(node is InputElement, true, reason: 'node is a checkbox');
       expect(node.type, 'checkbox', reason: 'node type is checkbox');

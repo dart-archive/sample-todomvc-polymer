@@ -118,6 +118,7 @@ main() async {
         #filterChanged: const Declaration(#filterChanged, Function, kind: METHOD, annotations: const[eventHandler]),
         #filterAction: const Declaration(#filterAction, Function, kind: METHOD, annotations: const[eventHandler]),
         #itemsFilter: const Declaration(#itemsFilter, Function, kind: METHOD, annotations: const[eventHandler]),
+        #ready: const Declaration(#ready, Function, kind: METHOD),
       },
       Todo: {
         #title: const Declaration(#title, String),

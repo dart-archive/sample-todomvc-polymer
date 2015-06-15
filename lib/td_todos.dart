@@ -49,6 +49,12 @@ class TodoList extends PolymerElement {
   factory TodoList() => new Element.tag('td-todos');
   TodoList.created() : super.created();
 
+  ready() {
+    window.onHashChange.listen((_) {
+      set('filter', window.location.hash.replaceFirst('#', ''));
+    });
+  }
+
   TodoInput get _newTodo => $['new-todo'];
 
   @eventHandler
@@ -111,8 +117,7 @@ class TodoList extends PolymerElement {
 
   @eventHandler
   filterChanged() {
-    // TODO(jakemac): Provide a proxy for dom-repeat elements.
-    new JsObject.fromBrowserObject($['todo-repeat']).callMethod('render');
+    ($['todo-repeat'] as DomRepeat).render();
     window.location.hash = filter;
     for (Element li in $['filters'].querySelectorAll('li')) {
       if (li.attributes['label'] == filter) {

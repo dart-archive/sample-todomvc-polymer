@@ -8,64 +8,60 @@ import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
-import 'package:todomvc/td_model.dart';
-import 'utils.dart';
+import 'package:todomvc/td_todos.dart';
+import 'package:todomvc/todo.dart';
 
 /**
  * This test runs the TodoMVC app, adds a few elements, marks some as done, and
  * switches from back and forth between "Active" and "All". This will make some
  * nodes to be hidden and readded to the page.
  */
-main() {
-  initPolymer();
+main() async {
+  await initPolymer();
   useHtmlConfiguration();
 
-  ShadowRoot root;
-  TodoModel model;
+  PolymerDom root;
+  TodoList todoList;
 
-  setUp(() => Polymer.onReady.then((_) {
-    root = querySelector('td-todos').shadowRoot;
-    model = querySelector('td-model');
-    return onPropertyInit(model, 'items');
-  }));
+  setUp(() {
+    todoList = Polymer.dom(document.body).querySelector('td-todos');
+    root = Polymer.dom(todoList.root);
+  });
 
   test('programmatically add items to model', () {
-    model.items.addAll([
+    todoList.addAll('items', [
       new Todo('one (unchecked)'),
       new Todo('two (checked)')..completed = true,
       new Todo('three (unchecked)')
     ]);
-    Observable.dirtyCheck();
     return window.animationFrame.then((_) {
       expect(root.querySelectorAll('#todo-list li[is=td-item]').length, 3);
 
-      // TODO(jmesserly): HTML Imports breaks relative hash links when the
-      // component is at a different path from the main HTML document. For now
-      // fix it programmatically.
       for (var a in root.querySelectorAll('#filters > li > a')) {
         a.href = '#${Uri.parse(a.href).fragment}';
       }
     });
   });
 
-  test('navigate to #/active', () {
-    windowLocation.hash = '#/active';
+  test('navigate to #active', () {
+    window.location.hash = 'active';
     return window.animationFrame.then((_) {
       expect(root.querySelectorAll('#todo-list li[is=td-item]').length, 2);
     });
   });
 
-  test('navigate to #/completed', () {
-    windowLocation.hash = '#/completed';
+  test('navigate to #completed', () {
+    window.location.hash = 'completed';
     return window.animationFrame.then((_) {
       expect(root.querySelectorAll('#todo-list li[is=td-item]').length, 1);
     });
   });
 
-  test('navigate back to #/', () {
-    windowLocation.hash = '#/';
+  test('navigate back to #', () {
+    window.location.hash = '';
     return window.animationFrame.then((_) {
       expect(root.querySelectorAll('#todo-list li[is=td-item]').length, 3);
+      todoList.clear('items');
     });
   });
 }
