@@ -19,7 +19,7 @@ class TodoList extends PolymerElement {
   bool anyItems;
 
   @Property(observer: 'itemsChanged')
-  List<Todo> items;
+  List<Todo> items = [];
 
   @Property(observer: 'storageIdChanged')
   String storageId = 'storage';
