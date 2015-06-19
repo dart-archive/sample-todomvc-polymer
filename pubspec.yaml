@@ -2,9 +2,8 @@ name: todomvc
 description: TodoMVC built with the polymer.dart package
 version: 0.15.1
 dependencies:
-  polymer:
-    path: '../polymer-dart'
-  web_components: any
+  polymer: ^0.17.0
+  web_components: ^0.12.0
   browser: any
 transformers:
 - web_components:
@@ -23,8 +22,10 @@ environment:
 
 dependency_overrides:
   polymer:
-    path: '../polymer-dart'
+    git:
+      ref: 0.17-0-dev-interop-reverse
+      url: https://github.com/dart-lang/polymer-dart.git
   polymer_interop:
-    path: '../polymer-interop'
-  web_components:
-    path: '../web-components'
+    git:
+      ref: 0.2.0-dev
+      url: https://github.com/dart-lang/polymer_interop.git
