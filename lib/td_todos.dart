@@ -19,7 +19,7 @@ class TodoList extends PolymerElement {
   bool anyItems;
 
   @Property(observer: 'itemsChanged')
-  List<Todo> items = [];
+  List<Todo> items;
 
   @Property(observer: 'storageIdChanged')
   String storageId = 'storage';
@@ -58,7 +58,7 @@ class TodoList extends PolymerElement {
   TodoInput get _newTodo => $['new-todo'];
 
   @eventHandler
-  bool itemsIsNotEmpty() => items.isNotEmpty;
+  bool itemsIsNotEmpty() => items == null ? false : items.isNotEmpty;
 
   @eventHandler
   bool isZero(int value) => value == 0;
@@ -90,10 +90,12 @@ class TodoList extends PolymerElement {
   }
 
   @eventHandler
-  int countActive() => items.where(filters['active']).length;
+  int countActive() =>
+      items == null ? 0 : items.where(filters['active']).length;
 
   @eventHandler
-  int countCompleted() => items.where(filters['completed']).length;
+  int countCompleted() =>
+      items == null ? 0 : items.where(filters['completed']).length;
 
   @eventHandler
   bool checkAllCompleted() {
@@ -105,7 +107,7 @@ class TodoList extends PolymerElement {
 
   @Observe('items.*')
   void itemsChanged() {
-    if (storageId != null) {
+    if (storageId != null && items != null) {
       storage[storageId] = JSON.encode(items);
     }
   }
