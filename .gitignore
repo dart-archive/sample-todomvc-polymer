@@ -12,6 +12,7 @@ packages
 *.sw?
 .idea/
 .pub/
+.packages
 
 # Include when developing application packages.
 pubspec.lock

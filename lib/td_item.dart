@@ -9,7 +9,7 @@ import 'todo.dart';
 import 'td_input.dart';
 
 @PolymerRegister('td-item', extendsTag: 'li')
-class TodoItem extends LIElement with PolymerMixin, JsProxy {
+class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
   @property
   bool editing = false;
 

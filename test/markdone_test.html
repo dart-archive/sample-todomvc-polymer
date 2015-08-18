@@ -9,13 +9,19 @@ BSD-style license that can be found in the LICENSE file.
   <!--polymer-test: this comment is needed for test_suite.dart-->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Polymer.dart • TodoMVC</title>
+
+  <script src="packages/web_components/webcomponents-lite.js"></script>
+  <script src="packages/web_components/dart_support.js"></script>
+
+  <link rel="x-dart-test" href="markdone_test.dart">
+  <!--<script type="application/dart" src="markdone_test.dart"></script>-->
+  <script src="packages/test/dart.js"></script>
+
   <link rel="stylesheet" href="packages/todomvc/app/app.css">
   <link rel="import" href="packages/todomvc/td_todos.html">
-  <script src="packages/unittest/test_controller.js"></script>
-  <title>Polymer.dart • TodoMVC</title>
 </head>
 <body>
   <td-todos></td-todos>
-  <script type="application/dart" src="markdone_test.dart"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@ import 'dart:html';
 import 'package:polymer/polymer.dart';
 
 @PolymerRegister('td-input', extendsTag: 'input')
-class TodoInput extends InputElement with PolymerMixin, JsProxy {
+class TodoInput extends InputElement with PolymerMixin, PolymerBase, JsProxy {
   factory TodoInput() => new Element.tag('input', 'td-input');
   TodoInput.created() : super.created() {
     polymerCreated();

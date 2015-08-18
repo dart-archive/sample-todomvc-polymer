@@ -1,25 +1,28 @@
 // Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
+@TestOn('browser')
 library todomvc.test.markdone_test;
 
 import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import 'package:unittest/unittest.dart';
-import 'package:unittest/html_config.dart';
+import 'package:test/test.dart';
 import 'package:todomvc/td_todos.dart';
 import 'package:todomvc/todo.dart';
+import 'package:smoke/mirrors.dart';
 
 Node findWithText(node, String text) {
   if (node.text == text) return node;
   if (node is Element && node.localName == 'dom-module') {
     return null;
   }
-  if (node is PolymerMixin && Polymer.dom((node as PolymerMixin).root) != null) {
-    var r = findWithText(Polymer.dom(node.root), text);
-    if (r != null) return r;
+  if (node is PolymerMixin) {
+    node = node as PolymerBase;
+    if (node.root != null) {
+      var r = findWithText(Polymer.dom(node.root), text);
+      if (r != null) return r;
+    }
   }
   for (var n in node.childNodes) {
     var r = findWithText(n, text);
@@ -33,8 +36,8 @@ Node findWithText(node, String text) {
  * programatically, and clicks on a checkbox to mark others via the UI.
  */
 main() async {
+  useMirrors();
   await initPolymer();
-  useHtmlConfiguration();
 
   TodoList todoList;
 
