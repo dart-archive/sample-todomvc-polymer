@@ -24,6 +24,8 @@ transformers:
     minify: true
     commandLineOptions:
     - --trust-type-annotations
+    - --trust-primitives
+#    - --dump-info
 dev_dependencies:
   test: ^0.12.3
 environment:
