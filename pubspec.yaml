@@ -12,6 +12,12 @@ transformers:
     - test/listorder_test.html
     - test/markdone_test.html
     - test/mainpage_test.html
+- reflectable:
+    entry_points:
+    - web/index.dart
+    - test/listorder_test.dart
+    - test/markdone_test.dart
+    - test/mainpage_test.dart
 - test/pub_serve:
     $include: test/**_test{.*,}.dart
 - $dart2js:
@@ -24,9 +30,11 @@ environment:
 dependency_overrides:
   polymer:
     git:
-      ref: 0.17-0-dev-interop-reverse
+      ref: behaviors
       url: https://github.com/dart-lang/polymer-dart.git
   polymer_interop:
     git:
       ref: 0.2.0-dev
       url: https://github.com/dart-lang/polymer_interop.git
+  reflectable:
+    path: ../reflectable/reflectable

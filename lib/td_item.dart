@@ -8,6 +8,7 @@ import 'package:web_components/web_components.dart';
 import 'todo.dart';
 import 'td_input.dart';
 
+@jsProxyReflectable
 @PolymerRegister('td-item', extendsTag: 'li')
 class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
   @property
@@ -27,7 +28,7 @@ class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
   }
 
   @eventHandler
-  editAction() {
+  editAction([_, __]) {
     set('editing', true);
     // schedule focus for the end of microtask, when the input will be visible
     new Future(() {}).then((_) {
@@ -36,7 +37,7 @@ class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
   }
 
   @eventHandler
-  commitAction() {
+  commitAction([_, __]) {
     if (editing) {
       set('editing', false);
       set('item.title', item.title.trim());
@@ -47,16 +48,16 @@ class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
   }
 
   @eventHandler
-  cancelAction() {
+  cancelAction([_, __]) {
     set('editing', false);
   }
 
   @eventHandler
-  destroyAction() {
+  destroyAction([_, __]) {
     fire('td-destroy-item', detail: item);
   }
 
   @eventHandler
-  String getClassString() =>
+  String getClassString([_, __]) =>
       'view${editing ? ' editing' : ''}${item.completed ? ' completed' : ''}';
 }

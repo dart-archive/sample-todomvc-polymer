@@ -10,6 +10,7 @@ import 'td_input.dart';
 import 'td_item.dart';
 import 'todo.dart';
 
+@jsProxyReflectable
 @PolymerRegister('td-todos')
 class TodoList extends PolymerElement {
   @Property(computed: 'isZero(completedCount)')
@@ -58,19 +59,19 @@ class TodoList extends PolymerElement {
   TodoInput get _newTodo => $['new-todo'];
 
   @eventHandler
-  bool itemsIsNotEmpty() => items == null ? false : items.isNotEmpty;
+  bool itemsIsNotEmpty([_, __]) => items == null ? false : items.isNotEmpty;
 
   @eventHandler
-  bool isZero(int value) => value == 0;
+  bool isZero(int value, [_]) => value == 0;
 
   @eventHandler
-  void addTodoAction() {
+  void addTodoAction([_, __]) {
     newItem(_newTodo.value);
     _newTodo.value = '';
   }
 
   @eventHandler
-  void cancelAddTodoAction() {
+  void cancelAddTodoAction([_, __]) {
     _newTodo.value = '';
   }
 
@@ -80,45 +81,45 @@ class TodoList extends PolymerElement {
   }
 
   @eventHandler
-  void toggleAllCompletedAction(e) {
+  void toggleAllCompletedAction(e, [_]) {
     setItemsCompleted(e.target.checked);
   }
 
   @eventHandler
-  void clearCompletedAction() {
+  void clearCompletedAction([_, __]) {
     clearItems();
   }
 
   @eventHandler
-  int countActive() =>
+  int countActive([_, __]) =>
       items == null ? 0 : items.where(filters['active']).length;
 
   @eventHandler
-  int countCompleted() =>
+  int countCompleted([_, __]) =>
       items == null ? 0 : items.where(filters['completed']).length;
 
   @eventHandler
-  bool checkAllCompleted() {
+  bool checkAllCompleted([_, __]) {
     return completedCount > 0 && activeCount == 0;
   }
 
   @eventHandler
-  String getActiveItemWord() => activeCount == 1 ? 'item' : 'items';
+  String getActiveItemWord(_) => activeCount == 1 ? 'item' : 'items';
 
   @Observe('items.*')
-  void itemsChanged() {
+  void itemsChanged([_, __]) {
     if (storageId != null && items != null) {
       storage[storageId] = JSON.encode(items);
     }
   }
 
   @eventHandler
-  void storageIdChanged() {
+  void storageIdChanged([_, __]) {
     _setItems();
   }
 
   @eventHandler
-  filterChanged() {
+  filterChanged([_, __]) {
     ($['todo-repeat'] as DomRepeat).render();
     window.location.hash = filter;
     for (Element li in $['filters'].querySelectorAll('li')) {
@@ -131,7 +132,7 @@ class TodoList extends PolymerElement {
   }
 
   @eventHandler
-  void filterAction(MouseEvent e) {
+  void filterAction(MouseEvent e, [_]) {
     if (e.target is! AnchorElement) return;
     var target = e.target as AnchorElement;
     set('filter', target.parent.attributes['label']);
