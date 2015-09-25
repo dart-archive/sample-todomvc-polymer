@@ -9,7 +9,8 @@
       </header>
       <section id="main" hidden="{{!anyItems}}">
         <input id="toggle-all" type="checkbox"
-               checked="{{allCompleted}}" on-change="toggleAllCompletedAction">
+               checked="{{checkAllCompleted(completedCount, activeCount)}}"
+               on-change="toggleAllCompletedAction">
         <label for="toggle-all">Mark all as complete</label>
         <ul id="todo-list" on-td-destroy-item="destroyItemAction">
           <template id="todo-repeat" is="dom-repeat" items="{{items}}"
@@ -18,10 +19,10 @@
           </template>
         </ul>
       </section>
-      <footer id="footer" hidden="{{!anyItems}}">
+      <footer id="footer" hidden="{{!isNotEmpty(items.*)}}">
         <span id="todo-count">
           <strong>{{activeCount}}</strong>
-          <span>{{activeItemWord}}</span>
+          <span>{{getActiveItemWord(activeCount)}}</span>
           left
         </span>
         <div id="filters" on-click="filterAction">
@@ -35,7 +36,7 @@
             <a>Completed</a>
           </li>
         </div>
-        <button hidden="{{completedEmpty}}" id="clear-completed"
+        <button hidden="{{isZero(completedCount)}}" id="clear-completed"
                 on-click="clearCompletedAction">
           Clear completed(<span>{{completedCount}}</span>)
         </button>

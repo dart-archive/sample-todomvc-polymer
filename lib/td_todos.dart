@@ -10,15 +10,8 @@ import 'td_input.dart';
 import 'td_item.dart';
 import 'todo.dart';
 
-@jsProxyReflectable
 @PolymerRegister('td-todos')
 class TodoList extends PolymerElement {
-  @Property(computed: 'isZero(completedCount)')
-  bool completedEmpty;
-
-  @Property(computed: 'itemsIsNotEmpty(items.*)')
-  bool anyItems;
-
   @Property(observer: 'itemsChanged')
   List<Todo> items;
 
@@ -30,9 +23,6 @@ class TodoList extends PolymerElement {
 
   @Property(computed: 'countActive(items.*)')
   int activeCount;
-
-  @Property(computed: 'checkAllCompleted(completedCount, activeCount)')
-  bool allCompleted;
 
   @Property(computed: 'getActiveItemWord(activeCount)')
   String activeItemWord;
@@ -59,7 +49,7 @@ class TodoList extends PolymerElement {
   TodoInput get _newTodo => $['new-todo'];
 
   @eventHandler
-  bool itemsIsNotEmpty([_, __]) => items == null ? false : items.isNotEmpty;
+  bool isNotEmpty(value) => value == null ? false : value.isNotEmpty;
 
   @eventHandler
   bool isZero(int value, [_]) => value == 0;
@@ -76,8 +66,8 @@ class TodoList extends PolymerElement {
   }
 
   @eventHandler
-  void destroyItemAction(e, detail) {
-    destroyItem(detail);
+  void destroyItemAction(e, [_]) {
+    destroyItem(e.detail);
   }
 
   @eventHandler
@@ -99,12 +89,12 @@ class TodoList extends PolymerElement {
       items == null ? 0 : items.where(filters['completed']).length;
 
   @eventHandler
-  bool checkAllCompleted([_, __]) {
-    return completedCount > 0 && activeCount == 0;
-  }
+  bool checkAllCompleted(int completedCount, int activeCount) =>
+      completedCount > 0 && activeCount == 0;
 
   @eventHandler
-  String getActiveItemWord(_) => activeCount == 1 ? 'item' : 'items';
+  String getActiveItemWord(int activeCount) =>
+      activeCount == 1 ? 'item' : 'items';
 
   @Observe('items.*')
   void itemsChanged([_, __]) {

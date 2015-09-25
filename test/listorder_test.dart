@@ -9,7 +9,6 @@ import 'package:polymer/polymer.dart';
 import 'package:test/test.dart';
 import 'package:todomvc/td_todos.dart';
 import 'package:todomvc/todo.dart';
-import 'package:smoke/mirrors.dart';
 
 /**
  * This test runs the TodoMVC app, adds a few elements, marks some as done, and
@@ -17,7 +16,6 @@ import 'package:smoke/mirrors.dart';
  * nodes to be hidden and readded to the page.
  */
 main() async {
-  useMirrors();
   await initPolymer();
 
   PolymerDom root;

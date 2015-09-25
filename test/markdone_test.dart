@@ -10,7 +10,6 @@ import 'package:polymer/polymer.dart';
 import 'package:test/test.dart';
 import 'package:todomvc/td_todos.dart';
 import 'package:todomvc/todo.dart';
-import 'package:smoke/mirrors.dart';
 
 Node findWithText(node, String text) {
   if (node.text == text) return node;
@@ -36,7 +35,6 @@ Node findWithText(node, String text) {
  * programatically, and clicks on a checkbox to mark others via the UI.
  */
 main() async {
-  useMirrors();
   await initPolymer();
 
   TodoList todoList;

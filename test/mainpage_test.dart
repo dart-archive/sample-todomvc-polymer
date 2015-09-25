@@ -8,13 +8,11 @@ import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:test/test.dart';
 import 'package:todomvc/td_todos.dart';
-import 'package:smoke/mirrors.dart';
 
 /**
  * This test runs the TodoMVC app and checks the state of the initial page.
  */
 main() async {
-  useMirrors();
   await initPolymer();
 
   TodoList todoList;

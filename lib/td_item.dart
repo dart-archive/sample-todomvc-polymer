@@ -8,7 +8,6 @@ import 'package:web_components/web_components.dart';
 import 'todo.dart';
 import 'td_input.dart';
 
-@jsProxyReflectable
 @PolymerRegister('td-item', extendsTag: 'li')
 class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
   @property
