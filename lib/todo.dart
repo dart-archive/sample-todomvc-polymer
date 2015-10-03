@@ -7,6 +7,7 @@ class Todo extends Object with JsProxy {
   @reflectable
   String title;
 
+  @reflectable
   bool completed = false;
 
   Todo(this.title);
