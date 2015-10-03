@@ -1,8 +1,10 @@
 library todomvc.td_model;
 
 import 'package:polymer/polymer_micro.dart';
+import 'package:polymer/polymer.dart';
 
 class Todo extends Object with JsProxy {
+  @reflectable
   String title;
 
   bool completed = false;

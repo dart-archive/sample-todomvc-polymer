@@ -48,51 +48,51 @@ class TodoList extends PolymerElement {
 
   TodoInput get _newTodo => $['new-todo'];
 
-  @eventHandler
+  @reflectable
   bool isNotEmpty(value) => value == null ? false : value.isNotEmpty;
 
-  @eventHandler
+  @reflectable
   bool isZero(int value, [_]) => value == 0;
 
-  @eventHandler
+  @reflectable
   void addTodoAction([_, __]) {
     newItem(_newTodo.value);
     _newTodo.value = '';
   }
 
-  @eventHandler
+  @reflectable
   void cancelAddTodoAction([_, __]) {
     _newTodo.value = '';
   }
 
-  @eventHandler
+  @reflectable
   void destroyItemAction(e, [_]) {
     destroyItem(e.detail);
   }
 
-  @eventHandler
+  @reflectable
   void toggleAllCompletedAction(e, [_]) {
     setItemsCompleted(e.target.checked);
   }
 
-  @eventHandler
+  @reflectable
   void clearCompletedAction([_, __]) {
     clearItems();
   }
 
-  @eventHandler
+  @reflectable
   int countActive([_, __]) =>
       items == null ? 0 : items.where(filters['active']).length;
 
-  @eventHandler
+  @reflectable
   int countCompleted([_, __]) =>
       items == null ? 0 : items.where(filters['completed']).length;
 
-  @eventHandler
+  @reflectable
   bool checkAllCompleted(int completedCount, int activeCount) =>
       completedCount > 0 && activeCount == 0;
 
-  @eventHandler
+  @reflectable
   String getActiveItemWord(int activeCount) =>
       activeCount == 1 ? 'item' : 'items';
 
@@ -103,12 +103,12 @@ class TodoList extends PolymerElement {
     }
   }
 
-  @eventHandler
+  @reflectable
   void storageIdChanged([_, __]) {
     _setItems();
   }
 
-  @eventHandler
+  @reflectable
   filterChanged([_, __]) {
     ($['todo-repeat'] as DomRepeat).render();
     window.location.hash = filter;
@@ -121,7 +121,7 @@ class TodoList extends PolymerElement {
     }
   }
 
-  @eventHandler
+  @reflectable
   void filterAction(MouseEvent e, [_]) {
     if (e.target is! AnchorElement) return;
     var target = e.target as AnchorElement;
@@ -137,7 +137,7 @@ class TodoList extends PolymerElement {
     }
   }
 
-  @eventHandler
+  @reflectable
   bool itemsFilter(Todo item) {
     var filterFn = filters[filter];
     return filterFn != null ? filterFn(item) : true;
