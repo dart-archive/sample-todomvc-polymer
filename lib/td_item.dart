@@ -26,7 +26,7 @@ class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
     polymerCreated();
   }
 
-  @eventHandler
+  @reflectable
   editAction([_, __]) {
     set('editing', true);
     // schedule focus for the end of microtask, when the input will be visible
@@ -35,7 +35,7 @@ class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
     });
   }
 
-  @eventHandler
+  @reflectable
   commitAction([_, __]) {
     if (editing) {
       set('editing', false);
@@ -46,17 +46,17 @@ class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
     }
   }
 
-  @eventHandler
+  @reflectable
   cancelAction([_, __]) {
     set('editing', false);
   }
 
-  @eventHandler
+  @reflectable
   destroyAction([_, __]) {
     fire('td-destroy-item', detail: item);
   }
 
-  @eventHandler
+  @reflectable
   String getClassString([_, __]) =>
       'view${editing ? ' editing' : ''}${item.completed ? ' completed' : ''}';
 }

@@ -3,9 +3,8 @@ library todomvc.td_input;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
-@jsProxyReflectable
 @PolymerRegister('td-input', extendsTag: 'input')
-class TodoInput extends InputElement with PolymerMixin, PolymerBase, JsProxy {
+class TodoInput extends InputElement with PolymerMixin, PolymerBase {
   factory TodoInput() => new Element.tag('input', 'td-input');
   TodoInput.created() : super.created() {
     polymerCreated();
