@@ -1,17 +1,14 @@
-<link rel="import" href="td_input.html">
-<polymer-element name="td-item" extends="li" on-blur="{{commitAction}}">
+<dom-module name="td-item">
+  <link rel="import" type="css" href="td_item.css">
   <template>
-    <link rel="stylesheet" href="td_item.css">
-    <div class="view {{ {'completed': item.completed, 'editing': editing} }}"
-        hidden?="{{editing}}" on-dblclick="{{editAction}}">
-      <input type="checkbox" class="toggle" checked="{{item.completed}}"
-          on-click="{{itemChangeAction}}">
-      <label>{{item.title}}</label>
-      <button class="destroy" on-click="{{destroyAction}}"></button>
+    <div class$="{{classString}}" hidden="{{editing}}">
+      <input type="checkbox" class="toggle" checked="{{item.completed::change}}"
+             id="completed">
+      <label on-dblclick="editAction">{{item.title}}</label>
+      <button class="destroy" on-click="destroyAction"></button>
     </div>
-    <input is="td-input" id="edit" class="edit" value="{{item.title}}"
-        hidden?="{{!editing}}" on-td-input-commit="{{commitAction}}"
-        on-td-input-cancel="{{cancelAction}}">
+    <input is="td-input" id="edit" class="edit" value="{{item.title::input}}"
+        hidden="{{!editing}}" on-td-input-commit="commitAction"
+        on-td-input-cancel="cancelAction" on-blur="commitAction">
   </template>
-  <script type="application/dart" src="td_item.dart"></script>
-</polymer-element>
+</dom-module>

@@ -3,14 +3,15 @@ library todomvc.td_input;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
-@CustomTag('td-input')
-class TodoInput extends InputElement with Polymer, Observable {
+@PolymerRegister('td-input', extendsTag: 'input')
+class TodoInput extends InputElement with PolymerMixin, PolymerBase {
   factory TodoInput() => new Element.tag('input', 'td-input');
   TodoInput.created() : super.created() {
     polymerCreated();
   }
 
-  keypressAction(e) {
+  @Listen('keypress')
+  keyPressAction(e, [_]) {
     // Listen for enter on keypress but esc on keyup, because
     // IE doesn't fire keyup for enter.
     if (e.keyCode == KeyCode.ENTER) {
@@ -19,7 +20,8 @@ class TodoInput extends InputElement with Polymer, Observable {
     }
   }
 
-  keyupAction(e) {
+  @Listen('keyup')
+  keyUpAction(e, [_]) {
     if (e.keyCode == KeyCode.ESC) {
       fire('td-input-cancel');
     }

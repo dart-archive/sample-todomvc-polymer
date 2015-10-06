@@ -1,45 +1,62 @@
+@HtmlImport('td_item.html')
 library todomvc.td_item;
 
+import 'dart:async';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import 'td_model.dart';
+import 'package:web_components/web_components.dart';
+import 'todo.dart';
+import 'td_input.dart';
 
-@CustomTag('td-item')
-class TodoItem extends LIElement with Polymer, Observable {
-  @published bool editing = false;
-  @published Todo item;
+@PolymerRegister('td-item', extendsTag: 'li')
+class TodoItem extends LIElement with PolymerMixin, PolymerBase, JsProxy {
+  @property
+  bool editing = false;
+
+  // Need to notify parent when we modify the item, since whether its completed
+  // or not affects its visibility based on the current filter.
+  @Property(notify: true)
+  Todo item;
+
+  @Property(computed: 'getClassString(editing, item.completed)')
+  String classString;
 
   factory TodoItem() => new Element.tag('li', 'td-item');
-  TodoItem.created() : super.created() { polymerCreated(); }
-
-  editAction() {
-    editing = true;
-    // schedule focus for the end of microtask, when the input will be visible
-    async((_) => $['edit'].focus());
+  TodoItem.created() : super.created() {
+    polymerCreated();
   }
 
-  commitAction() {
+  @reflectable
+  editAction([_, __]) {
+    set('editing', true);
+    // schedule focus for the end of microtask, when the input will be visible
+    new Future(() {}).then((_) {
+      $['edit'].focus();
+    });
+  }
+
+  @reflectable
+  commitAction([_, __]) {
     if (editing) {
-      editing = false;
-      item.title = item.title.trim();
+      set('editing', false);
+      set('item.title', item.title.trim());
       if (item.title == '') {
         destroyAction();
       }
-      fire('td-item-changed');
     }
   }
 
-  cancelAction() {
-    editing = false;
+  @reflectable
+  cancelAction([_, __]) {
+    set('editing', false);
   }
 
-  itemChangeAction() {
-    // TODO(jmesserly): asyncFire is needed because "click" fires before
-    // "item.checked" is updated on Firefox. Need to check Polymer.js.
-    asyncFire('td-item-changed');
-  }
-
-  destroyAction() {
+  @reflectable
+  destroyAction([_, __]) {
     fire('td-destroy-item', detail: item);
   }
+
+  @reflectable
+  String getClassString([_, __]) =>
+      'view${editing ? ' editing' : ''}${item.completed ? ' completed' : ''}';
 }
