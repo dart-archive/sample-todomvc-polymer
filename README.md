@@ -2,7 +2,7 @@
 
 > Build structured, encapsulated, client-side web apps with Dart and web components.
 
-> _[Polymer.dart](https://www.dartlang.org/polymer-dart/)_
+> _[Polymer.dart](https://github.com/dart-lang/polymer-dart/)_
 
 > Polymer is a new type of library for the web, built on top of Web Components, and designed to leverage the evolving web platform on modern browsers.
 
@@ -10,7 +10,7 @@
 
 ## Learning Polymer
 
-The [Polymer.dart website](https://www.dartlang.org/polymer-dart/) is a great resource for getting started.
+The [Polymer.dart wiki](https://github.com/dart-lang/polymer-dart/wiki) is a great resource for getting started.
 
 Get help from Polymer devs and users:
 
