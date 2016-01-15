@@ -14,7 +14,7 @@ class TodoInput extends InputElement with PolymerMixin, PolymerBase {
   keyPressAction(e, [_]) {
     // Listen for enter on keypress but esc on keyup, because
     // IE doesn't fire keyup for enter.
-    if (e.keyCode == KeyCode.ENTER) {
+    if ((e.original as KeyboardEvent).keyCode == KeyCode.ENTER) {
       e.preventDefault();
       fire('td-input-commit');
     }
@@ -22,7 +22,7 @@ class TodoInput extends InputElement with PolymerMixin, PolymerBase {
 
   @Listen('keyup')
   keyUpAction(e, [_]) {
-    if (e.keyCode == KeyCode.ESC) {
+    if ((e.original as KeyboardEvent).keyCode == KeyCode.ESC) {
       fire('td-input-cancel');
     }
   }

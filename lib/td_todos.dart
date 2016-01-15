@@ -122,7 +122,7 @@ class TodoList extends PolymerElement {
   }
 
   @reflectable
-  void filterAction(MouseEvent e, [_]) {
+  void filterAction(e, [_]) {
     if (e.target is! AnchorElement) return;
     var target = e.target as AnchorElement;
     set('filter', target.parent.attributes['label']);
